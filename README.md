@@ -26,8 +26,8 @@ npm start
 - Uploaded images and videos are stored as blobs in IndexedDB (12 MB each).
 - Export downloads a JSON backup. Import replaces the catalog in this browser after you confirm.
 - The contact form **saves an inquiry in this browser**. It does not send email. The success message says so.
-- `hello@example.com` is a sample address. `example.com` does not deliver mail. Replace it in Settings.
-- Leave WhatsApp blank until you have a real number. The public site hides the link when it is empty.
+- The public email is `paschalaguero007@gmail.com`. The public phone is `+2348087900285`, used for calls and WhatsApp.
+- The contact form still saves the inquiry in this browser. It does not send email.
 
 ## What is not real
 

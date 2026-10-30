@@ -15,8 +15,8 @@ export const SEED_AT = "2026-03-01T09:00:00.000Z";
 
 export const defaultSettings: SiteSettings = {
   studioName: site.name,
-  email: "hello@example.com",
-  whatsapp: "",
+  email: "paschalaguero007@gmail.com",
+  whatsapp: "2348087900285",
   heroHeadline: site.headline,
   heroDescription: site.lede,
   adminPin: "forge",
@@ -508,7 +508,7 @@ export const seedFaqs: FaqItem[] = [
     order: 6,
     question: "What happens when I submit the inquiry form?",
     answer:
-      "The inquiry is saved in this browser. No email is sent, because the site has no mail service connected. Use the email or WhatsApp link if one has been set in the studio desk, and keep a copy of your note.",
+      "The inquiry is saved in this browser. No email is sent, because the site has no mail service connected. Email paschalaguero007@gmail.com, call or WhatsApp +2348087900285, and keep a copy of your note.",
   }),
   faq({
     id: "faq_existing",

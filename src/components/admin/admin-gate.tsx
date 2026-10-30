@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { ArrowLeft, Menu, X } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -76,6 +76,7 @@ function LockScreen({ onUnlock }: { onUnlock: () => void }) {
 
 function Desk({ children, onLock }: { children: React.ReactNode; onLock: () => void }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { setQuery, query } = useAdminQuery();
   const [open, setOpen] = useState(false);
 
@@ -117,6 +118,17 @@ function Desk({ children, onLock }: { children: React.ReactNode; onLock: () => v
             <span className="sr-only">Search the desk</span>
             <input className="field" value={query} placeholder="Search this desk" onChange={(event) => setQuery(event.target.value)} />
           </label>
+          <button
+            type="button"
+            className="inline-flex min-h-11 items-center gap-2 border border-line px-3 text-sm"
+            onClick={() => {
+              if (window.history.length > 1) router.back();
+              else router.push("/");
+            }}
+          >
+            <ArrowLeft size={14} />
+            Back
+          </button>
           <Link href="/" className="hidden text-sm text-muted sm:inline">
             View site
           </Link>

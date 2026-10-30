@@ -50,7 +50,15 @@ function mediaChoices(media: MediaMeta[], kind: "image" | "video", empty: string
 const motifOptions = motifs.map((motif) => ({ label: motif.label, value: motif.id }));
 
 function Loading() {
-  return <p className="text-sm text-muted">Loading catalog…</p>;
+  return (
+    <div className="space-y-3" aria-busy="true" aria-label="Loading the desk">
+      <div className="h-8 w-48 animate-pulse bg-line" />
+      <div className="h-12 animate-pulse bg-line" />
+      <div className="h-12 animate-pulse bg-line" />
+      <div className="h-12 animate-pulse bg-line" />
+      <div className="h-12 animate-pulse bg-line" />
+    </div>
+  );
 }
 
 export function PortfolioAdmin() {

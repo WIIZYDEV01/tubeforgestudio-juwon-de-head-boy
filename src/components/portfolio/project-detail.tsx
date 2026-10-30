@@ -57,6 +57,7 @@ export function ProjectDetail({ slug }: { slug: string }) {
   const mediaUrl = useMediaUrl(project?.mediaId);
   const { has, toggle } = useFavorites();
   const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const related = publishedProjects.filter((item) => item.category === project?.category && item.id !== project?.id).slice(0, 3);
   const studies = publishedCaseStudies.filter((item) => item.projectSlug === slug);
 
@@ -91,6 +92,24 @@ export function ProjectDetail({ slug }: { slug: string }) {
           </button>
           <button type="button" className={buttonClass("secondary")} aria-pressed={has(project.id)} onClick={() => toggle(project.id)}>
             {has(project.id) ? "Saved" : "Save"}
+          </button>
+          <button
+            type="button"
+            className={buttonClass("secondary")}
+            onClick={() => {
+              const share = navigator.share?.bind(navigator);
+              const url = window.location.href;
+              if (share) {
+                void share({ title: project.title, url }).catch(() => undefined);
+                return;
+              }
+              void navigator.clipboard.writeText(url).then(() => {
+                setCopied(true);
+                window.setTimeout(() => setCopied(false), 2000);
+              });
+            }}
+          >
+            {copied ? "Link copied" : "Share"}
           </button>
         </div>
       </Section>

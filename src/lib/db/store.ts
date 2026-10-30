@@ -1,5 +1,5 @@
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
-import { createSeedSnapshot, type SeedSnapshot } from "@/data/seed";
+import { createSeedSnapshot, defaultSettings, type SeedSnapshot } from "@/data/seed";
 import {
   activitySchema,
   backupSchema,
@@ -431,6 +431,19 @@ export async function openContentStore(): Promise<{ store: ContentStore; persist
     });
     const existing = await db.get("meta", "settings");
     if (!existing) await writeSeed(db);
+    else {
+      const parsed = settingsSchema.safeParse(existing.settings);
+      if (parsed.success && parsed.data.email === "hello@example.com") {
+        await db.put("meta", {
+          id: "settings",
+          settings: {
+            ...parsed.data,
+            email: defaultSettings.email,
+            whatsapp: parsed.data.whatsapp || defaultSettings.whatsapp,
+          },
+        });
+      }
+    }
     return { store: createIdbStore(db), persistent: true };
   } catch {
     return { store: createMemoryStore(), persistent: false };

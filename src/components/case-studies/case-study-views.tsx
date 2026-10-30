@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Poster } from "@/components/portfolio/poster";
 import { Dialog } from "@/components/ui/dialog";
-import { Badge, EmptyState, Section, SectionHeading, Skeleton } from "@/components/ui/misc";
+import { Badge, EmptyState, SearchField, Section, SectionHeading, Skeleton } from "@/components/ui/misc";
 import { buttonClass } from "@/components/ui/button";
 import { useContent } from "@/hooks/content-provider";
 import type { CaseStudy } from "@/types/content";
@@ -44,6 +44,12 @@ function GalleryLightbox({
 
 export function CaseStudyList() {
   const { ready, publishedCaseStudies } = useContent();
+  const [query, setQuery] = useState("");
+  const studies = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return publishedCaseStudies;
+    return publishedCaseStudies.filter((study) => `${study.title} ${study.industry} ${study.brief}`.toLowerCase().includes(needle));
+  }, [publishedCaseStudies, query]);
   return (
     <Section film="harbor">
       <SectionHeading
@@ -51,10 +57,14 @@ export function CaseStudyList() {
         title="The work, unpacked."
         body="These studies explain a brief, a constraint, and a production path. Concept studies do not invent results."
       />
+      <div className="mb-6 max-w-md">
+        <SearchField label="Search case studies" value={query} onChange={setQuery} onClear={() => setQuery("")} placeholder="Search studies" />
+      </div>
       {!ready ? <Skeleton className="h-64" /> : null}
       {ready && publishedCaseStudies.length === 0 ? <EmptyState title="No case studies published." body="Add one in the studio desk." /> : null}
+      {ready && publishedCaseStudies.length > 0 && studies.length === 0 ? <EmptyState title="No matching study." body="Try another word, or clear the search." /> : null}
       <div className="space-y-6">
-        {publishedCaseStudies.map((study) => (
+        {studies.map((study) => (
           <article key={study.id} className="grid gap-4 border border-line bg-card lg:grid-cols-[1.1fr_0.9fr]">
             <Poster motif={study.galleryMotifs[0] ?? "forge"} title={study.title} kicker={study.industry} badge={study.kind === "concept" ? "Concept" : "Client"} />
             <div className="p-5">

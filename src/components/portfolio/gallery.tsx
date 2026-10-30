@@ -2,10 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, X } from "lucide-react";
 import { ProjectCard } from "@/components/portfolio/project-card";
 import { PreviewModal } from "@/components/portfolio/preview-modal";
-import { EmptyState, SectionHeading, Skeleton } from "@/components/ui/misc";
+import { EmptyState, SearchField, SectionHeading, Skeleton } from "@/components/ui/misc";
 import { buttonClass } from "@/components/ui/button";
 import { CATEGORIES } from "@/data/options";
 import { useContent } from "@/hooks/content-provider";
@@ -27,6 +26,7 @@ export function Gallery({
   const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
   const [favoritesOnly, setFavoritesOnly] = useState(favoritesOnlyDefault);
+  const [sort, setSort] = useState<"featured" | "title" | "year">("featured");
   const [preview, setPreview] = useState<PortfolioProject | null>(null);
 
   const categories = useMemo(() => {
@@ -36,7 +36,7 @@ export function Gallery({
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    return publishedProjects.filter((project) => {
+    const matched = publishedProjects.filter((project) => {
       if (category !== "All" && project.category !== category) return false;
       if (favoritesOnly && !has(project.id)) return false;
       if (!needle) return true;
@@ -45,7 +45,12 @@ export function Gallery({
         .toLowerCase();
       return haystack.includes(needle);
     });
-  }, [publishedProjects, category, query, favoritesOnly, has]);
+    const sorted = [...matched];
+    if (sort === "title") sorted.sort((a, b) => a.title.localeCompare(b.title));
+    if (sort === "year") sorted.sort((a, b) => String(b.year).localeCompare(String(a.year)));
+    if (sort === "featured") sorted.sort((a, b) => Number(b.featured) - Number(a.featured));
+    return sorted;
+  }, [publishedProjects, category, query, favoritesOnly, has, sort]);
 
   const visible = typeof limit === "number" ? filtered.slice(0, limit) : filtered;
 
@@ -65,20 +70,24 @@ export function Gallery({
           }
         />
       ) : null}
-      <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <label className="relative block w-full lg:max-w-sm">
-          <span className="sr-only">Search projects</span>
-          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-          <input className="field pl-10" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search titles, niches, services" />
-          {query ? (
-            <button type="button" className="absolute right-2 top-1/2 grid size-8 -translate-y-1/2 place-items-center" aria-label="Clear search" onClick={() => setQuery("")}>
-              <X size={14} />
-            </button>
-          ) : null}
-        </label>
-        <button type="button" className={cn("min-h-11 border px-3 text-sm", favoritesOnly ? "border-accent text-accent" : "border-line")} aria-pressed={favoritesOnly} onClick={() => setFavoritesOnly((value) => !value)}>
+      <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-center">
+        <div className="w-full lg:max-w-md">
+          <SearchField label="Search projects" value={query} onChange={setQuery} onClear={() => setQuery("")} placeholder="Search titles, niches, services" />
+        </div>
+        <div className="w-full lg:w-48 lg:shrink-0">
+          <label className="search-field">
+            <span className="sr-only">Sort projects</span>
+            <select value={sort} onChange={(event) => setSort(event.target.value as "featured" | "title" | "year")}>
+              <option value="featured">Featured first</option>
+              <option value="title">Title</option>
+              <option value="year">Year</option>
+            </select>
+          </label>
+        </div>
+        <button type="button" className={cn("min-h-12 border px-3 text-sm", favoritesOnly ? "border-accent text-accent" : "border-line")} aria-pressed={favoritesOnly} onClick={() => setFavoritesOnly((value) => !value)}>
           Favorites only
         </button>
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted lg:ml-auto">{visible.length} showing</p>
       </div>
       <div className="mb-8 flex gap-2 overflow-x-auto pb-1" role="toolbar" aria-label="Filter by category">
         {categories.map((item) => (

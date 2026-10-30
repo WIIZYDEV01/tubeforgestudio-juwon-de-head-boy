@@ -1,9 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { Plus } from "lucide-react";
-import { EmptyState, Section, SectionHeading, Skeleton } from "@/components/ui/misc";
+import { EmptyState, SearchField, Section, SectionHeading, Skeleton } from "@/components/ui/misc";
 import { useContent } from "@/hooks/content-provider";
 import { cn } from "@/lib/utils";
 
@@ -11,13 +12,27 @@ export function FaqList({ embedded = false }: { embedded?: boolean }) {
   const { ready, publishedFaqs } = useContent();
   const reduce = useReducedMotion();
   const [open, setOpen] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const needle = query.trim().toLowerCase();
+  const faqs = publishedFaqs.filter((faq) => !needle || `${faq.question} ${faq.answer}`.toLowerCase().includes(needle));
   const body = (
     <>
       {!embedded ? (
         <SectionHeading eyebrow="FAQ" title="Straight answers." body="Process, labelling, and what the inquiry form actually does." />
       ) : (
-        <SectionHeading eyebrow="FAQ" title="Before you write." />
+        <SectionHeading
+          eyebrow="FAQ"
+          title="Before you write."
+          action={
+            <Link href="/faq" className="inline-flex min-h-11 items-center border border-line px-3 text-sm">
+              All answers
+            </Link>
+          }
+        />
       )}
+      <div className="mb-6 max-w-md">
+        <SearchField label="Search questions" value={query} onChange={setQuery} onClear={() => setQuery("")} placeholder="Search questions" />
+      </div>
       {!ready ? (
         <div className="space-y-3">
           {Array.from({ length: 4 }, (_, index) => (
@@ -26,9 +41,11 @@ export function FaqList({ embedded = false }: { embedded?: boolean }) {
         </div>
       ) : publishedFaqs.length === 0 ? (
         <EmptyState title="No questions published." body="Add FAQ entries in the studio desk." />
+      ) : faqs.length === 0 ? (
+        <EmptyState title="No matching question." body="Try a different word, or clear the search." />
       ) : (
         <div className="border-t border-line">
-          {publishedFaqs.map((faq) => {
+          {faqs.map((faq) => {
             const expanded = open === faq.id;
             return (
               <div key={faq.id} className="border-b border-line">

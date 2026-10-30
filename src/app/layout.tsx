@@ -35,13 +35,14 @@ export const viewport: Viewport = {
   themeColor: "#090909",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 const themeBoot = `try{var t=localStorage.getItem("tfs-theme");document.documentElement.setAttribute("data-theme",t==="light"?"light":"dark");}catch(e){document.documentElement.setAttribute("data-theme","dark");}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="dark" className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="en" data-theme="dark" data-scroll-behavior="smooth" className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full bg-studio font-sans text-ink">
         <Script id="tfs-theme" strategy="beforeInteractive">
           {themeBoot}

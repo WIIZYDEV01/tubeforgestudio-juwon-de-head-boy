@@ -48,12 +48,12 @@ export function SettingsAdmin() {
         <label>
           <span className="label">Email</span>
           <input className="field" {...form.register("email")} />
-          <span className="mt-1 block text-xs text-muted">hello@example.com does not deliver mail. Replace it with a real address when you have one.</span>
+          <span className="mt-1 block text-xs text-muted">Shown on the contact page. The inquiry form still only saves a copy in this browser.</span>
         </label>
         <label>
-          <span className="label">WhatsApp number</span>
-          <input className="field" {...form.register("whatsapp")} placeholder="15551234567" />
-          <span className="mt-1 block text-xs text-muted">Digits only, with country code. Leave blank to hide the link.</span>
+          <span className="label">Phone / WhatsApp</span>
+          <input className="field" {...form.register("whatsapp")} placeholder="2348087900285" />
+          <span className="mt-1 block text-xs text-muted">Digits only, with country code. Shown as a call link and a WhatsApp link.</span>
         </label>
         <label>
           <span className="label">Hero headline</span>

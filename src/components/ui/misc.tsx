@@ -1,3 +1,4 @@
+import { Search, X } from "lucide-react";
 import { SectionFilm, type FilmName } from "@/components/animations/section-film";
 import { cn } from "@/lib/utils";
 
@@ -55,7 +56,14 @@ export function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className={cn("relative isolate overflow-hidden py-20 sm:py-24 lg:py-28", tone === "raised" && "bg-studio-2", className)}>
+    <section
+      id={id}
+      className={cn(
+        "relative isolate overflow-hidden py-20 [content-visibility:auto] [contain-intrinsic-size:auto_48rem] sm:py-24 lg:py-28",
+        tone === "raised" && "bg-studio-2",
+        className,
+      )}
+    >
       <SectionFilm name={film} />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-studio/25 via-transparent to-studio/40" />
       <div className="relative z-10">
@@ -85,6 +93,33 @@ export function SectionHeading({
       </div>
       {action}
     </div>
+  );
+}
+
+export function SearchField({
+  value,
+  onChange,
+  placeholder,
+  label,
+  onClear,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  label: string;
+  onClear?: () => void;
+}) {
+  return (
+    <label className="search-field">
+      <span className="sr-only">{label}</span>
+      <Search size={18} strokeWidth={1.75} className="pointer-events-none text-muted" aria-hidden />
+      <input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} />
+      {value && onClear ? (
+        <button type="button" className="grid size-8 shrink-0 place-items-center" aria-label="Clear search" onClick={onClear}>
+          <X size={14} />
+        </button>
+      ) : null}
+    </label>
   );
 }
 

@@ -69,8 +69,23 @@ export function explainStorageError(error: unknown) {
   return "The change could not be saved in this browser.";
 }
 
+export function phoneDigits(value: string) {
+  return value.replace(/\D/g, "");
+}
+
+export function phoneLabel(value: string) {
+  const digits = phoneDigits(value);
+  return digits ? `+${digits}` : "";
+}
+
+export function telHref(value: string) {
+  const digits = phoneDigits(value);
+  if (digits.length < 8) return null;
+  return `tel:+${digits}`;
+}
+
 export function whatsappHref(value: string) {
-  const digits = value.replace(/\D/g, "");
+  const digits = phoneDigits(value);
   if (digits.length < 8) return null;
   return `https://wa.me/${digits}`;
 }

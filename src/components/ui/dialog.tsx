@@ -50,8 +50,9 @@ export function Dialog({
             </h2>
             {description ? <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">{description}</p> : null}
           </div>
-          <button type="button" data-close="true" className="grid size-11 place-items-center border border-line" onClick={onClose} aria-label="Close">
-            <X size={18} />
+          <button type="button" data-close="true" className="inline-flex min-h-11 shrink-0 items-center gap-2 border border-line px-3" onClick={onClose}>
+            <X size={16} />
+            Cancel
           </button>
         </div>
         {children}

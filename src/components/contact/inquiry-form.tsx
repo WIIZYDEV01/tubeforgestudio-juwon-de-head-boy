@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
 import { BUDGETS } from "@/data/options";
 import { inquiryFormSchema, type InquiryFormValues } from "@/lib/validation/schemas";
-import { createId, nowIso, whatsappHref } from "@/lib/utils";
+import { createId, nowIso, phoneLabel, telHref, whatsappHref } from "@/lib/utils";
 import { useContent } from "@/hooks/content-provider";
 import { useToast } from "@/components/ui/toast";
 import { buttonClass } from "@/components/ui/button";
@@ -40,10 +40,13 @@ function InquiryFields() {
     },
   });
 
+  const chosen = publishedServices.find((service) => service.slug === preset);
+
   useEffect(() => {
-    const match = publishedServices.find((service) => service.slug === preset);
-    if (match) form.setValue("service", match.title);
-  }, [preset, publishedServices, form]);
+    if (!chosen) return;
+    form.setValue("service", chosen.title);
+    if (window.location.hash === "#inquiry") document.getElementById("inquiry")?.scrollIntoView({ block: "start" });
+  }, [chosen, form]);
 
   const onSubmit = form.handleSubmit(async (values) => {
     const duplicate = inquiries.some(
@@ -78,19 +81,27 @@ function InquiryFields() {
   if (savedId) {
     const mail = settings.email;
     const whatsapp = whatsappHref(settings.whatsapp);
+    const call = telHref(settings.whatsapp);
+    const phone = phoneLabel(settings.whatsapp);
     const sampleMail = mail.endsWith("@example.com");
     return (
       <div className="border border-line bg-card p-6" role="status">
         <h3 className="font-display text-3xl uppercase">Inquiry saved on this device.</h3>
         <p className="mt-3 text-sm leading-relaxed text-muted">
-          No email was sent. This website has no mail service connected. The note stays in this browser, where the studio desk can read it. Reference {savedId}.
+          No email was sent. This website has no mail service connected. The note stays in this browser, where the studio desk can read it. Reference {savedId}. Reach the studio at {mail}
+          {phone ? ` or ${phone}` : ""}.
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
           <button type="button" className={buttonClass("secondary")} onClick={() => setSavedId(null)}>
             Write another inquiry
           </button>
+          {call ? (
+            <a className={buttonClass("primary")} href={call}>
+              Call {phone}
+            </a>
+          ) : null}
           {whatsapp ? (
-            <a className={buttonClass("primary")} href={whatsapp} target="_blank" rel="noreferrer">
+            <a className={buttonClass("secondary")} href={whatsapp} target="_blank" rel="noreferrer">
               WhatsApp
             </a>
           ) : null}
@@ -108,6 +119,7 @@ function InquiryFields() {
 
   return (
     <form className="grid gap-4" onSubmit={onSubmit} noValidate>
+      {chosen ? <p className="border border-accent/40 bg-card px-3 py-3 text-sm">Starting with {chosen.title}. The service is already selected below.</p> : null}
       <label>
         <span className="label">Full name</span>
         <input className="field" autoComplete="name" aria-invalid={Boolean(form.formState.errors.fullName)} {...form.register("fullName")} />
