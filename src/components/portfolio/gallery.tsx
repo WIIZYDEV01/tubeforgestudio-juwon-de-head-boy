@@ -1,0 +1,130 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import { Search, X } from "lucide-react";
+import { ProjectCard } from "@/components/portfolio/project-card";
+import { PreviewModal } from "@/components/portfolio/preview-modal";
+import { EmptyState, SectionHeading, Skeleton } from "@/components/ui/misc";
+import { buttonClass } from "@/components/ui/button";
+import { CATEGORIES } from "@/data/options";
+import { useContent } from "@/hooks/content-provider";
+import { useFavorites } from "@/hooks/use-favorites";
+import type { PortfolioProject } from "@/types/content";
+import { cn } from "@/lib/utils";
+
+export function Gallery({
+  limit,
+  heading = true,
+  favoritesOnlyDefault = false,
+}: {
+  limit?: number;
+  heading?: boolean;
+  favoritesOnlyDefault?: boolean;
+}) {
+  const { ready, publishedProjects } = useContent();
+  const { has } = useFavorites();
+  const [category, setCategory] = useState("All");
+  const [query, setQuery] = useState("");
+  const [favoritesOnly, setFavoritesOnly] = useState(favoritesOnlyDefault);
+  const [preview, setPreview] = useState<PortfolioProject | null>(null);
+
+  const categories = useMemo(() => {
+    const present = new Set(publishedProjects.map((project) => project.category));
+    return ["All", ...CATEGORIES.filter((item) => present.has(item)), ...[...present].filter((item) => !CATEGORIES.includes(item as (typeof CATEGORIES)[number]))];
+  }, [publishedProjects]);
+
+  const filtered = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return publishedProjects.filter((project) => {
+      if (category !== "All" && project.category !== category) return false;
+      if (favoritesOnly && !has(project.id)) return false;
+      if (!needle) return true;
+      const haystack = [project.title, project.summary, project.description, project.category, project.format, project.services.join(" "), project.duration]
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(needle);
+    });
+  }, [publishedProjects, category, query, favoritesOnly, has]);
+
+  const visible = typeof limit === "number" ? filtered.slice(0, limit) : filtered;
+
+  return (
+    <div>
+      {heading ? (
+        <SectionHeading
+          eyebrow="Portfolio"
+          title="Work with the seams showing."
+          body="Every seeded piece is a concept project. Commissioned work appears only when you add it in the studio desk and mark it as client work."
+          action={
+            limit ? (
+              <Link href="/portfolio" className={buttonClass("secondary")}>
+                Full catalog
+              </Link>
+            ) : null
+          }
+        />
+      ) : null}
+      <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <label className="relative block w-full lg:max-w-sm">
+          <span className="sr-only">Search projects</span>
+          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+          <input className="field pl-10" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search titles, niches, services" />
+          {query ? (
+            <button type="button" className="absolute right-2 top-1/2 grid size-8 -translate-y-1/2 place-items-center" aria-label="Clear search" onClick={() => setQuery("")}>
+              <X size={14} />
+            </button>
+          ) : null}
+        </label>
+        <button type="button" className={cn("min-h-11 border px-3 text-sm", favoritesOnly ? "border-accent text-accent" : "border-line")} aria-pressed={favoritesOnly} onClick={() => setFavoritesOnly((value) => !value)}>
+          Favorites only
+        </button>
+      </div>
+      <div className="mb-8 flex gap-2 overflow-x-auto pb-1" role="toolbar" aria-label="Filter by category">
+        {categories.map((item) => (
+          <button
+            key={item}
+            type="button"
+            aria-pressed={category === item}
+            className={cn("shrink-0 border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em]", category === item ? "border-accent bg-accent text-accent-ink" : "border-line text-muted")}
+            onClick={() => setCategory(item)}
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+      {!ready ? (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {Array.from({ length: limit ?? 6 }, (_, index) => (
+            <Skeleton key={index} className="aspect-[4/5]" />
+          ))}
+        </div>
+      ) : visible.length === 0 ? (
+        <EmptyState
+          title="Nothing in this cut."
+          body="No published project matches the current search or filter. Clear them, or add a project in the studio desk."
+          action={
+            <button
+              type="button"
+              className={buttonClass("secondary")}
+              onClick={() => {
+                setQuery("");
+                setCategory("All");
+                setFavoritesOnly(false);
+              }}
+            >
+              Clear filters
+            </button>
+          }
+        />
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {visible.map((project) => (
+            <ProjectCard key={project.id} project={project} onPreview={setPreview} />
+          ))}
+        </div>
+      )}
+      <PreviewModal project={preview} onClose={() => setPreview(null)} />
+    </div>
+  );
+}
