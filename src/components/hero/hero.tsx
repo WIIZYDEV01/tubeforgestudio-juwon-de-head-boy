@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
+import { SectionFilm } from "@/components/animations/section-film";
 import { Poster } from "@/components/portfolio/poster";
 import { buttonClass } from "@/components/ui/button";
 import { useContent } from "@/hooks/content-provider";
@@ -48,7 +49,7 @@ function Reel() {
   const reduce = useReducedMotion();
   const frames = useMemo(() => publishedProjects.slice(0, 5), [publishedProjects]);
   const [index, setIndex] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
   const frame = frames[index] ?? frames[0];
   const mediaUrl = useMediaUrl(frame?.mediaId);
 
@@ -109,6 +110,7 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden">
+      <SectionFilm name="ember" />
       <div className="studio-grid animate-drift pointer-events-none absolute inset-0 opacity-60" />
       <div className="pointer-events-none absolute -left-20 top-10 h-72 w-72 rounded-full bg-accent/15 blur-3xl" />
       <div className="pointer-events-none absolute right-0 top-1/3 h-80 w-80 rounded-full bg-accent/10 blur-3xl" />
@@ -135,7 +137,7 @@ export function Hero() {
             </Link>
           </div>
           <p className="mt-6 max-w-md font-mono text-[10px] uppercase leading-relaxed tracking-[0.14em] text-muted">
-            The reel is a set of concept frames. Sample projects on this site are marked concept until real work is added.
+            The reel plays concept frames on its own. They are drawn key art, not a video file, until you attach footage in the studio desk.
           </p>
         </div>
         <div

@@ -13,7 +13,7 @@ export function CompareSection() {
   const current = publishedComparisons[active] ?? publishedComparisons[0];
 
   return (
-    <Section id="compare">
+    <Section id="compare" film="split">
       <SectionHeading
         eyebrow="Thumbnail studies"
         title="Before the frame, and after it."

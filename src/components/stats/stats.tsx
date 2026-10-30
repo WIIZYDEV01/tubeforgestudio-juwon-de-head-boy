@@ -49,7 +49,7 @@ export function Stats() {
   const ordered = [...statistics].sort((a, b) => a.order - b.order);
 
   return (
-    <Section id="stats" tone="raised">
+    <Section id="stats" tone="raised" film="ledger">
       <SectionHeading
         eyebrow="Studio statistics"
         title="Numbers, only when they are real."

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function FavoritesPage() {
   return (
-    <Section>
+    <Section film="drift">
       <SectionHeading eyebrow="Favorites" title="Saved on this device." body="Favorites live in this browser. They are not an account and they do not sync." />
       <Gallery heading={false} favoritesOnlyDefault />
     </Section>

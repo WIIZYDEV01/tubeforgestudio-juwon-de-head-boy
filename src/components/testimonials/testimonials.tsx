@@ -48,7 +48,7 @@ export function Testimonials() {
   }, [reduce, paused, publishedTestimonials.length]);
 
   return (
-    <Section id="testimonials">
+    <Section id="testimonials" film="grain">
       <SectionHeading
         eyebrow="Notes"
         title="Reviews, when they are real."

@@ -15,7 +15,7 @@ export function ServiceBoard({ density = "compact" }: { density?: "compact" | "f
   const [active, setActive] = useState<ServiceItem | null>(null);
 
   return (
-    <Section id="services" tone={density === "full" ? "studio" : "raised"}>
+    <Section id="services" tone={density === "full" ? "studio" : "raised"} film={density === "full" ? "orbit" : "pulse"}>
       <SectionHeading
         eyebrow="Services"
         title="Twelve ways a channel gets made."

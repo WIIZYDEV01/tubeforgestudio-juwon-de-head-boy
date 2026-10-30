@@ -39,9 +39,9 @@ export function ContactBand({ page = false }: { page?: boolean }) {
       </div>
     </>
   );
-  if (page) return <div className="py-12 sm:py-16">{copy}</div>;
+  if (page) return <Section film="ink">{copy}</Section>;
   return (
-    <Section id="contact">
+    <Section id="contact" film="forge">
       {copy}
     </Section>
   );

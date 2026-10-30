@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function PortfolioPage() {
   return (
-    <Section>
+    <Section film="reels">
       <Gallery heading />
     </Section>
   );

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ContactBand } from "@/components/contact/contact-band";
-import { Wrap } from "@/components/ui/misc";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -10,8 +9,6 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <Wrap>
-      <ContactBand page />
-    </Wrap>
+    <ContactBand page />
   );
 }

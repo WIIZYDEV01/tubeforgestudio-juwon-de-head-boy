@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { Plus } from "lucide-react";
-import { EmptyState, Section, SectionHeading, Skeleton, Wrap } from "@/components/ui/misc";
+import { EmptyState, Section, SectionHeading, Skeleton } from "@/components/ui/misc";
 import { useContent } from "@/hooks/content-provider";
 import { cn } from "@/lib/utils";
 
@@ -62,14 +62,10 @@ export function FaqList({ embedded = false }: { embedded?: boolean }) {
   );
   if (embedded) {
     return (
-      <Section id="faq" tone="raised">
+      <Section id="faq" tone="raised" film="signal">
         {body}
       </Section>
     );
   }
-  return (
-    <Wrap>
-      <div className="py-16">{body}</div>
-    </Wrap>
-  );
+  return <Section film="still">{body}</Section>;
 }

@@ -55,7 +55,7 @@ export function Gallery({
         <SectionHeading
           eyebrow="Portfolio"
           title="Work with the seams showing."
-          body="Every seeded piece is a concept project. Commissioned work appears only when you add it in the studio desk and mark it as client work."
+          body="This is the catalog a buyer opens. Seeded pieces are concept drawings, not photos or video files. Commissioned work appears here after you add it in the studio desk and mark it as client work."
           action={
             limit ? (
               <Link href="/portfolio" className={buttonClass("secondary")}>

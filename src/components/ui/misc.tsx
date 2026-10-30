@@ -1,3 +1,4 @@
+import { SectionFilm, type FilmName } from "@/components/animations/section-film";
 import { cn } from "@/lib/utils";
 
 export function Tooltip({ label, children }: { label: string; children: React.ReactNode }) {
@@ -43,17 +44,23 @@ export function Wrap({ className, children }: { className?: string; children: Re
 export function Section({
   id,
   tone = "studio",
+  film,
   className,
   children,
 }: {
   id?: string;
   tone?: "studio" | "raised";
+  film: FilmName;
   className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className={cn("py-20 sm:py-24 lg:py-28", tone === "raised" && "bg-studio-2", className)}>
-      <Wrap>{children}</Wrap>
+    <section id={id} className={cn("relative isolate overflow-hidden py-20 sm:py-24 lg:py-28", tone === "raised" && "bg-studio-2", className)}>
+      <SectionFilm name={film} />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-studio/25 via-transparent to-studio/40" />
+      <div className="relative z-10">
+        <Wrap>{children}</Wrap>
+      </div>
     </section>
   );
 }

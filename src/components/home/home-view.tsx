@@ -19,7 +19,7 @@ export function HomeView() {
       <Hero />
       <Stats />
       <Featured />
-      <Section id="work">
+      <Section id="work" film="scan">
         <Gallery limit={6} />
       </Section>
       <ServiceBoard />

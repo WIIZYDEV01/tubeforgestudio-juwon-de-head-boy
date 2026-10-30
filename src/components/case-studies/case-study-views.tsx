@@ -45,7 +45,7 @@ function GalleryLightbox({
 export function CaseStudyList() {
   const { ready, publishedCaseStudies } = useContent();
   return (
-    <Section>
+    <Section film="harbor">
       <SectionHeading
         eyebrow="Case studies"
         title="The work, unpacked."
@@ -76,7 +76,7 @@ export function CaseStudyList() {
 export function CasePreview() {
   const { ready, publishedCaseStudies } = useContent();
   return (
-    <Section>
+    <Section film="atlas">
       <SectionHeading
         eyebrow="Case studies"
         title="How a piece is thought through."
@@ -109,10 +109,10 @@ export function CaseStudyDetail({ slug }: { slug: string }) {
   const linked = publishedProjects.find((item) => item.slug === study?.projectSlug);
   const related = publishedProjects.filter((item) => study?.relatedSlugs.includes(item.slug));
 
-  if (!ready) return <Section><Skeleton className="h-80" /></Section>;
+  if (!ready) return <Section film="harbor"><Skeleton className="h-80" /></Section>;
   if (!study) {
     return (
-      <Section>
+      <Section film="harbor">
         <h1 className="font-display text-5xl uppercase">Study not found</h1>
         <Link href="/case-studies" className={buttonClass("primary", "md", "mt-6")}>
           All studies
@@ -123,12 +123,12 @@ export function CaseStudyDetail({ slug }: { slug: string }) {
 
   return (
     <article>
-      <Section>
+      <Section film="harbor">
         <Badge tone="accent">{study.kind === "concept" ? "Concept case study" : "Commissioned"}</Badge>
         <h1 className="mt-4 max-w-4xl font-display text-5xl uppercase leading-[0.9] sm:text-7xl">{study.title}</h1>
         <p className="mt-4 text-muted">{study.industry}</p>
       </Section>
-      <Section tone="raised">
+      <Section tone="raised" film="salt">
         <div className="grid gap-8">
           {[
             ["Brief", study.brief],

@@ -17,14 +17,14 @@ export function Featured() {
   const [open, setOpen] = useState(false);
   if (!ready) {
     return (
-      <Section>
+      <Section film="dusk">
         <Skeleton className="aspect-[16/8]" />
       </Section>
     );
   }
   if (!project) return null;
   return (
-    <Section>
+    <Section film="dusk">
       <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-accent">Featured</p>
       <div className="mt-6 grid items-center gap-8 lg:grid-cols-2">
         <Poster motif={project.motif} title={project.title} kicker={project.category} badge={project.kind === "concept" ? "Concept" : "Client work"} mediaUrl={mediaUrl} />
@@ -60,10 +60,10 @@ export function ProjectDetail({ slug }: { slug: string }) {
   const related = publishedProjects.filter((item) => item.category === project?.category && item.id !== project?.id).slice(0, 3);
   const studies = publishedCaseStudies.filter((item) => item.projectSlug === slug);
 
-  if (!ready) return <Section><Skeleton className="aspect-video" /></Section>;
+  if (!ready) return <Section film="still"><Skeleton className="aspect-video" /></Section>;
   if (!project) {
     return (
-      <Section>
+      <Section film="still">
         <h1 className="font-display text-5xl uppercase">Project not in the catalog</h1>
         <p className="mt-4 max-w-xl text-muted">It may be unpublished, renamed, or stored only in another browser.</p>
         <Link href="/portfolio" className={buttonClass("primary", "md", "mt-6")}>
@@ -75,7 +75,7 @@ export function ProjectDetail({ slug }: { slug: string }) {
 
   return (
     <article>
-      <Section>
+      <Section film="still">
         <Poster motif={project.motif} title={project.title} kicker={project.category} badge={project.kind === "concept" ? "Concept" : "Client work"} mediaUrl={mediaUrl} />
         <div className="mt-8 flex flex-wrap gap-2">
           <Badge>{project.format}</Badge>
@@ -94,7 +94,7 @@ export function ProjectDetail({ slug }: { slug: string }) {
           </button>
         </div>
       </Section>
-      <Section tone="raised">
+      <Section tone="raised" film="ember">
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
           <div>
             <h2 className="font-display text-3xl uppercase">About this piece</h2>
@@ -138,7 +138,7 @@ export function ProjectDetail({ slug }: { slug: string }) {
         ) : null}
       </Section>
       {related.length > 0 ? (
-        <Section>
+        <Section film="atlas">
           <h2 className="font-display text-4xl uppercase">Related</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {related.map((item) => (

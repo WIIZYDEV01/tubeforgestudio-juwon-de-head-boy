@@ -4,7 +4,7 @@ import { Section, SectionHeading } from "@/components/ui/misc";
 
 export function Workflow() {
   return (
-    <Section id="process" tone="raised">
+    <Section id="process" tone="raised" film="salt">
       <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
         <div className="lg:sticky lg:top-24 lg:self-start">
           <SectionHeading eyebrow="Workflow" title="Six steps. Then it ships." body="A production timeline for a channel system. The order tightens when a script or a cut already exists." />

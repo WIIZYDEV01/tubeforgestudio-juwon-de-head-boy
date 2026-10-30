@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { AdminSearchProvider, useAdminQuery } from "@/components/admin/search";
+import { SectionFilm, filmForAdmin } from "@/components/animations/section-film";
 import { Wordmark } from "@/components/layout/wordmark";
 import { Button } from "@/components/ui/button";
 import { useContent } from "@/hooks/content-provider";
@@ -30,11 +31,14 @@ const links = [
 const pinSchema = z.object({ pin: z.string().min(1, "Enter the demonstration PIN.") });
 
 function LockScreen({ onUnlock }: { onUnlock: () => void }) {
+  const pathname = usePathname();
   const { ready, settings } = useContent();
   const form = useForm<{ pin: string }>({ resolver: zodResolver(pinSchema), defaultValues: { pin: "" } });
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-lg flex-col justify-center px-5 py-16">
+    <div className="relative min-h-screen">
+      <SectionFilm name={filmForAdmin(pathname)} quiet fixed />
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-lg flex-col justify-center px-5 py-16">
       <Wordmark />
       <h1 className="mt-8 font-display text-5xl uppercase leading-none">Studio desk</h1>
       <p className="mt-4 text-sm leading-relaxed text-muted">
@@ -65,6 +69,7 @@ function LockScreen({ onUnlock }: { onUnlock: () => void }) {
       <Link href="/" className="mt-6 text-sm text-muted">
         Back to the site
       </Link>
+      </div>
     </div>
   );
 }
@@ -82,7 +87,9 @@ function Desk({ children, onLock }: { children: React.ReactNode; onLock: () => v
   };
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-[240px_minmax(0,1fr)]">
+    <div className="relative min-h-screen">
+      <SectionFilm name={filmForAdmin(pathname)} quiet fixed />
+      <div className="relative z-10 min-h-screen bg-studio/80 lg:grid lg:grid-cols-[240px_minmax(0,1fr)]">
       {open ? <button type="button" className="fixed inset-0 z-30 bg-black/60 lg:hidden" aria-label="Close menu" onClick={() => setOpen(false)} /> : null}
       <aside className={cn("fixed inset-y-0 left-0 z-40 w-64 overflow-y-auto border-r border-line bg-studio p-4 lg:static lg:block lg:w-auto", open ? "block" : "hidden")}>
         <Wordmark />
@@ -119,6 +126,7 @@ function Desk({ children, onLock }: { children: React.ReactNode; onLock: () => v
         </header>
         <div className="px-4 py-6 sm:px-6 lg:px-8">{children}</div>
       </div>
+      </div>
     </div>
   );
 }
@@ -128,7 +136,14 @@ export function AdminGate({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setUnlocked(sessionStorage.getItem("tfs-admin") === "yes");
   }, []);
-  if (unlocked === null) return <p className="p-8 text-sm text-muted">Opening the desk…</p>;
+  if (unlocked === null) {
+    return (
+      <div className="relative min-h-screen">
+        <SectionFilm name="ember" quiet fixed />
+        <p className="relative z-10 p-8 text-sm text-muted">Opening the desk…</p>
+      </div>
+    );
+  }
   if (!unlocked) return <LockScreen onUnlock={() => setUnlocked(true)} />;
   return (
     <AdminSearchProvider>
